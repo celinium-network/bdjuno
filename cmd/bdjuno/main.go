@@ -17,6 +17,8 @@ import (
 
 	"github.com/forbole/bdjuno/v4/database"
 	"github.com/forbole/bdjuno/v4/modules"
+
+	coordinatorapp "github.com/celinium-network/restaking_protocol/app/coordinator"
 )
 
 func main() {
@@ -56,6 +58,7 @@ func main() {
 func getBasicManagers() []module.BasicManager {
 	return []module.BasicManager{
 		simapp.ModuleBasics,
+		coordinatorapp.ModuleBasics,
 	}
 }
 

@@ -1,0 +1,16 @@
+FROM golang:1.20-alpine AS builder
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+ENV GOPROXY=https://goproxy.cn,direct
+RUN apk update && apk add --no-cache make git
+WORKDIR /go/src/github.com/forbole/bdjuno
+COPY . ./
+RUN go mod download
+RUN make build
+
+FROM alpine:latest
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+RUN apk add --update bash jq
+ENV PATH="/path/to/bash:$PATH"
+COPY --from=builder /go/src/github.com/forbole/bdjuno/build/bdjuno /usr/bin/bdjuno
+COPY ./bdjuno_start.sh /usr/bin/bdjuno_start.sh
+CMD [ "bdjuno_start.sh" ]
